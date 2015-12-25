@@ -2,8 +2,6 @@ package com.eyeball.randomutils.event;
 
 import com.eyeball.randomutils.StaticConstants;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.command.CommandHelp;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.ServerChatEvent;
 
 import java.util.regex.Pattern;
