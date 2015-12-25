@@ -1,0 +1,16 @@
+[
+{
+  "modid": "RandomUtil",
+  "name": "Random Utils",
+  "description": "Random Utilities for minecraft",
+  "version": "1.0.0",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Eyeballcode"],
+  "credits": "Forge, FML, Me",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
