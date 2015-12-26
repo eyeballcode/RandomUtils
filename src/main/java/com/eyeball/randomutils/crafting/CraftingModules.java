@@ -22,6 +22,5 @@ public class CraftingModules {
         if (hasInit) return;
         hasInit = true;
         Registry.addShapelessRecipe(new ItemStack(Items.experience_bottle), new ItemStack(Items.glass_bottle));
-        Registry.addShapelessRecipe(new ItemStack(Items.experience_bottle), new ItemStack(Items.glass_bottle), new ItemStack(Blocks.dirt));
     }
 }
