@@ -24,4 +24,9 @@ public class StaticConstants {
 
     public static boolean dingOnLC = true;
     public static String dingOnLCSound = "minecraft:random.click";
+
+    public static final String MODID = "RandomUtil";
+    public static final String DEPENDENCIES = "after:*;";
+    public static final String NAME = "Random Utils";
+
 }

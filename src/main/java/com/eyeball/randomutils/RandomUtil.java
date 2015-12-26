@@ -1,26 +1,23 @@
 package com.eyeball.randomutils;
 
+import com.eyeball.randomutils.crafting.CraftingModules;
 import com.eyeball.randomutils.event.ChatMessageListener;
+import com.eyeball.randomutils.event.GuiListener;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundManager;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.command.CommandHelp;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Map;
 
-@Mod(modid = "RandomUtil", dependencies = "after:*;", name = "Random Utils", version = "1.0.0", acceptedMinecraftVersions = "1.7.10")
+@Mod(modid = StaticConstants.MODID, dependencies = StaticConstants.DEPENDENCIES, name = StaticConstants.NAME, version = "1.0.0", acceptedMinecraftVersions = "1.7.10")
 public class RandomUtil {
-
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -44,14 +41,18 @@ public class RandomUtil {
 
         StaticConstants.dingOnLC = StaticConstants.CONFIG.get("Misc", "Ding on load complete", true, "Play a sound when Minecraft finishes loading.").getBoolean();
         StaticConstants.dingOnLCSound = StaticConstants.CONFIG.get("Misc", "Sound to play on Load Complete", "minecraft:random.click", "What sound to play when Minecraft finishes loading").getString();
+
+        if (StaticConstants.dingOnLC)
+            MinecraftForge.EVENT_BUS.register(new GuiListener());
+
         if (StaticConstants.CONFIG.hasChanged())
             StaticConstants.CONFIG.save();
-    }
-
-    @Mod.EventHandler
-    public void loadComplete(FMLLoadCompleteEvent event) {
-        if (StaticConstants.dingOnLC) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(StaticConstants.dingOnLCSound)));
+        CraftingModules.init();
+        try {
+            Annotation[] annotations = PlayerEvent.ItemCraftedEvent.class.getAnnotations();
+            System.out.println(Arrays.toString(annotations));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
