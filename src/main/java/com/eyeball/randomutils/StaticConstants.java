@@ -16,10 +16,12 @@ public class StaticConstants {
     public static boolean enableEnderPearlInCreative = true;
 
     public static ArrayList<String> removeCommands = new ArrayList<String>();
-    public  static boolean enableRemoveCommands;
+    public static boolean enableRemoveCommands;
 
     public static ArrayList<String> vulgarities = new ArrayList<String>();
-    public  static boolean noVulgarities;
+    public static boolean noVulgarities = true;
     public static String replaceVulgarityWith = "*";
 
+    public static boolean dingOnLC = true;
+    public static String dingOnLCSound = "minecraft:random.click";
 }

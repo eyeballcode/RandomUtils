@@ -3,8 +3,15 @@ package com.eyeball.randomutils;
 import com.eyeball.randomutils.event.ChatMessageListener;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundManager;
+import net.minecraft.command.CommandHelp;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
@@ -34,21 +41,36 @@ public class RandomUtil {
             StaticConstants.replaceVulgarityWith = StaticConstants.CONFIG.get("Tweaks", "Replace vulgarity with", "*", "Replace vulgarities with this character").getString();
             MinecraftForge.EVENT_BUS.register(new ChatMessageListener());
         }
+
+        StaticConstants.dingOnLC = StaticConstants.CONFIG.get("Misc", "Ding on load complete", true, "Play a sound when Minecraft finishes loading.").getBoolean();
+        StaticConstants.dingOnLCSound = StaticConstants.CONFIG.get("Misc", "Sound to play on Load Complete", "minecraft:random.click", "What sound to play when Minecraft finishes loading").getString();
         if (StaticConstants.CONFIG.hasChanged())
             StaticConstants.CONFIG.save();
     }
 
     @Mod.EventHandler
+    public void loadComplete(FMLLoadCompleteEvent event) {
+        if (StaticConstants.dingOnLC) {
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(StaticConstants.dingOnLCSound)));
+        }
+    }
+
+    @Mod.EventHandler
     public void serverLoad(FMLServerStartingEvent event) {
         if (StaticConstants.enableRemoveCommands) {
-            Map commands = event.getServer().getCommandManager().getCommands();
-            for (String command : StaticConstants.removeCommands) {
-                if (commands.get(command) == null) {
-                    StaticConstants.LOGGER.warn("Attempted to remove nonexistent command " + command + ", skipping");
-                } else {
-                    commands.remove(command);
-                    StaticConstants.LOGGER.info("Successfully removed command " + command + "!");
-                }
+            removeCommands(event.getServer().getCommandManager().getCommands());
+            event.registerServerCommand(new CommandHelp());
+        }
+    }
+
+    private void removeCommands(Map commands) {
+        commands.remove("help");
+        for (String command : StaticConstants.removeCommands) {
+            if (commands.get(command) == null) {
+                StaticConstants.LOGGER.warn("Attempted to remove nonexistent command " + command + ", skipping");
+            } else {
+                commands.remove(command);
+                StaticConstants.LOGGER.info("Successfully removed command " + command + "!");
             }
         }
     }
